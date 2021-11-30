@@ -18,8 +18,8 @@ _This program uses csv files to generate a list of objects representing flashcar
 
 ## Features to be Added
 
-> Rewrite functions to use other language csv files (Italian and Spanish)
-> Add UI elements to support picking other languages
+> 1. Rewrite functions to use other language csv files (Italian and Spanish)
+> 2. Add UI elements to support picking other languages
 
 ### Known Bugs
 
