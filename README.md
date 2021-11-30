@@ -20,9 +20,9 @@ _This program uses csv files to generate a list of objects representing flashcar
 
 > 1. Add UI elements to support picking other languages
 
-### Known Bugs
+### Known Bugs / Issues
 
-- N/A
+- introduced a limitation whereby English is the only supported language to translate to (ln 33). But as that is the only language supported in the dat files, it is not too big an issue presently.
 
 ---
 
