@@ -5,27 +5,36 @@ import csv
 BACKGROUND_COLOR = "#B1DDC6"
 card = {}
 learning_list = []
+temp_card_list = []
+STRING_A = "_words_to_learn.csv"
+STRING_B = "_words.csv"
+user_choice = "French"
 
 # Create new flash cards
-temp_card_list = []
-try:
-    with open("data/french_words_to_learn.csv", newline='') as file:
-        temp_elem_list = csv.reader(file)
-except FileNotFoundError:
-    with open("data/french_words.csv", newline='') as file:
+
+
+def file_reader(user_choice, file_string):
+    global temp_card_list
+    file_name = user_choice.lower()
+    with open(f"data/{file_name}" + file_string, newline='') as file:
         temp_elem_list = csv.reader(file)
         for row in temp_elem_list:
             temp_card_list.append(row)
-else:
-    for row in temp_elem_list:
-        temp_card_list.append(row)
 
-lang = temp_card_list[0][0]
-to_lang = temp_card_list[0][1]
-temp_card_list.pop(0)
-for elem in temp_card_list:
-    dict_card = {lang: elem[0], to_lang: elem[1]}
-    learning_list.append(dict_card)
+
+def get_cards(user_choice):
+    global learning_list, temp_card_list
+    try:
+        file_reader(user_choice, STRING_A)
+    except FileNotFoundError:
+        file_reader(user_choice, STRING_B)
+    lang = user_choice
+    to_lang = "English"
+    if "English" in temp_card_list[0]:
+        temp_card_list.pop(0)
+    for elem in temp_card_list:
+        dict_card = {lang: elem[0], to_lang: elem[1]}
+        learning_list.append(dict_card)
 
 
 # Fun functions
@@ -33,8 +42,8 @@ def serve_card():
     global card, flip_timer
     window.after_cancel(flip_timer)
     card = choice(learning_list)
-    canvas.itemconfig(info_text, text="French", fill="black")
-    canvas.itemconfig(word_text, text=card["French"], fill="black")
+    canvas.itemconfig(info_text, text=user_choice, fill="black")
+    canvas.itemconfig(word_text, text=card[user_choice], fill="black")
     canvas.itemconfig(card_background, image=front_card_img)
     flip_timer = window.after(3000, flip_card)
 
@@ -46,16 +55,20 @@ def flip_card():
 
 
 def i_knew_it():
+    global user_choice
+    file_name = user_choice.lower()
     global card
     learning_list.remove(card)
-    with open("data/french_words_to_learn.csv", "w") as data:
+    with open(f"data/{file_name}" + STRING_A, "w") as data:
         for elem in learning_list:
-            data.write(f"{elem['French']},{elem['English']}")
+            data.write(f"{elem[user_choice]},{elem['English']}")
             data.write("\n")
     serve_card()
 
 
 # UI setup
+
+
 window = Tk()
 window.config(background=BACKGROUND_COLOR, padx=50, pady=50)
 window.title("Flash cards")
@@ -99,6 +112,7 @@ right_button = Button(
 )
 right_button.grid(column=1, row=1)
 
+get_cards(user_choice)
 serve_card()
 
 window.mainloop()
