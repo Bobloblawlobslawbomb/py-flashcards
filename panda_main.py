@@ -4,16 +4,16 @@ from random import choice
 
 BACKGROUND_COLOR = "#B1DDC6"
 card = {}
-learning_dict = {}
+learning_list = []
 # Create new flash cards
 
 try:
     data = pandas.read_csv("data/french_words_to_learn.csv")
 except FileNotFoundError:
     og_data = pandas.read_csv("data/french_words.csv")
-    learning_dict = og_data.to_dict(orient="records")
+    learning_list = og_data.to_dict(orient="records")
 else:
-    learning_dict = data.to_dict(orient="records")
+    learning_list = data.to_dict(orient="records")
 # Ex. [{'French': 'partie', 'English': 'part'}]
 
 # Fun functions
@@ -22,7 +22,7 @@ else:
 def serve_card():
     global card, flip_timer
     window.after_cancel(flip_timer)
-    card = choice(learning_dict)
+    card = choice(learning_list)
     canvas.itemconfig(info_text, text="French", fill="black")
     canvas.itemconfig(word_text, text=card["French"], fill="black")
     canvas.itemconfig(card_background, image=front_card_img)
@@ -36,8 +36,8 @@ def flip_card():
 
 
 def i_knew_it():
-    learning_dict.remove(card)
-    data = pandas.DataFrame(learning_dict)
+    learning_list.remove(card)
+    data = pandas.DataFrame(learning_list)
     data.to_csv("data/french_words_to_learn.csv", index=False)
     serve_card()
 
